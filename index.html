@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Story Reader — English Story Viewer</title>
+    <meta name="description" content="Read English stories with vocabulary and Japanese translations at your fingertips.">
+    <link rel="stylesheet" href="style.css">
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#0f0f1a">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Lora:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <!-- ===== Story List View ===== -->
+    <section id="view-list" class="view active">
+        <header class="list-header">
+            <h1 class="app-title">📖 Story Reader</h1>
+            <div class="header-actions">
+                <button id="theme-btn" class="icon-btn" aria-label="Toggle theme">🌙</button>
+                <button id="settings-btn" class="icon-btn" aria-label="Settings">⚙️</button>
+            </div>
+        </header>
+        <div id="story-list" class="story-list">
+            <div class="empty-state">
+                <div class="empty-icon">📚</div>
+                <p>まだストーリーがありません</p>
+                <p class="empty-sub">下の＋ボタンから追加しましょう</p>
+            </div>
+        </div>
+        <button id="add-story-fab" class="fab" aria-label="Add new story">＋</button>
+    </section>
+
+    <!-- ===== Reader View ===== -->
+    <section id="view-reader" class="view">
+        <header class="reader-top-bar">
+            <button id="back-btn" class="icon-btn" aria-label="Back">←</button>
+            <span id="reader-chapter-info" class="chapter-info">Ch. 1</span>
+            <button id="reader-menu-btn" class="icon-btn" aria-label="Menu">⋮</button>
+        </header>
+
+        <!-- Reader Menu Dropdown -->
+        <div id="reader-menu" class="reader-menu hidden">
+            <button id="add-chapter-btn" class="menu-item">📝 チャプターを追加</button>
+            <button id="delete-story-btn" class="menu-item danger">🗑️ ストーリーを削除</button>
+        </div>
+
+        <article class="reader-body">
+            <h1 id="reader-title" class="reader-title">Loading...</h1>
+            <div id="reader-text" class="reader-text"></div>
+        </article>
+
+        <!-- Chapter Navigation -->
+        <div id="chapter-nav" class="chapter-nav hidden">
+            <button id="prev-chapter" class="chapter-btn" disabled>‹ 前</button>
+            <span id="chapter-indicator" class="chapter-indicator">1 / 1</span>
+            <button id="next-chapter" class="chapter-btn">次 ›</button>
+        </div>
+
+        <!-- Floating Tabs for Bottom Sheet -->
+        <div class="floating-tabs">
+            <button class="tab-btn" data-sheet="vocab">📖 単語</button>
+            <button class="tab-btn" data-sheet="translation">🇯🇵 訳</button>
+        </div>
+
+        <!-- Bottom Sheet: Vocabulary -->
+        <div id="sheet-vocab" class="bottom-sheet">
+            <div class="sheet-handle" data-sheet="vocab"></div>
+            <div class="sheet-header">
+                <h2>📖 重要単語ピックアップ</h2>
+            </div>
+            <div id="vocab-content" class="sheet-content"></div>
+        </div>
+
+        <!-- Bottom Sheet: Translation -->
+        <div id="sheet-translation" class="bottom-sheet">
+            <div class="sheet-handle" data-sheet="translation"></div>
+            <div class="sheet-header">
+                <h2>🇯🇵 日本語訳</h2>
+            </div>
+            <div id="translation-content" class="sheet-content"></div>
+        </div>
+
+        <!-- Overlay for bottom sheets -->
+        <div id="sheet-overlay" class="sheet-overlay hidden"></div>
+    </section>
+
+    <!-- ===== Add/Edit View ===== -->
+    <section id="view-add" class="view">
+        <header class="add-header">
+            <button id="add-back-btn" class="icon-btn" aria-label="Back">←</button>
+            <h1 id="add-view-title">新しいストーリー</h1>
+        </header>
+
+        <!-- Target story selector (for adding chapters) -->
+        <div id="target-story-section" class="target-story-section hidden">
+            <label class="field-label">追加先ストーリー</label>
+            <div id="target-story-name" class="target-story-name"></div>
+        </div>
+
+        <form id="add-form" class="add-form">
+            <label class="field-label" for="story-input">テンプレートテキストを貼り付け</label>
+            <textarea id="story-input" placeholder="### 1. Title: ...
+### 2. English Short Story
+...
+### 3. 重要単語ピックアップ
+* **Word**: 意味
+### 4. 日本語訳
+..." required></textarea>
+            <div class="form-actions">
+                <button type="submit" class="btn primary">パース＆保存</button>
+            </div>
+        </form>
+    </section>
+
+    <!-- ===== Settings View ===== -->
+    <section id="view-settings" class="view">
+        <header class="add-header">
+            <button id="settings-back-btn" class="icon-btn" aria-label="Back">←</button>
+            <h1>設定</h1>
+        </header>
+
+        <div class="settings-group">
+            <h2>外観</h2>
+            <div class="setting-item">
+                <span>ダークモード</span>
+                <button id="theme-toggle-settings" class="btn secondary">テーマ切替</button>
+            </div>
+        </div>
+
+        <div class="settings-group">
+            <h2>データ管理</h2>
+            <div class="setting-item">
+                <span>バックアップ</span>
+                <button id="backup-export-btn" class="btn secondary">エクスポート (.json)</button>
+            </div>
+            <div class="setting-item">
+                <span>復元</span>
+                <div class="import-group">
+                    <input type="file" id="backup-import-file" accept=".json">
+                    <button id="backup-import-btn" class="btn secondary">インポート</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script src="app.js"></script>
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('sw.js')
+                    .then(r => console.log('SW registered:', r.scope))
+                    .catch(e => console.log('SW registration failed:', e));
+            });
+        }
+    </script>
+</body>
+
+</html>
