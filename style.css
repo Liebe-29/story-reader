@@ -90,8 +90,15 @@ body {
 }
 
 @keyframes viewFadeIn {
-    from { opacity: 0; transform: translateY(8px); }
-    to { opacity: 1; transform: translateY(0); }
+    from {
+        opacity: 0;
+        transform: translateY(8px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 /* --- Buttons --- */
@@ -164,6 +171,7 @@ body {
     justify-content: space-between;
     align-items: center;
     padding: 1.25rem 0.5rem;
+    padding-top: calc(env(safe-area-inset-top, 1.25rem) + 0.5rem);
     position: sticky;
     top: 0;
     z-index: 10;
@@ -323,6 +331,7 @@ body {
     justify-content: space-between;
     align-items: center;
     padding: 0.75rem 1rem;
+    padding-top: calc(env(safe-area-inset-top, 0.75rem) + 0.75rem);
     position: sticky;
     top: 0;
     z-index: 30;
@@ -562,7 +571,7 @@ body {
     bottom: 0;
     left: 0;
     right: 0;
-    max-height: 75vh;
+    max-height: 45vh;
     background: var(--bg-sheet);
     border-radius: var(--radius-xl) var(--radius-xl) 0 0;
     box-shadow: var(--shadow-sheet);
